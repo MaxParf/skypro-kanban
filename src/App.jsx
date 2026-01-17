@@ -1,8 +1,8 @@
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
-import PopBrowse from "./components/PopBrowse/PopBrowse";
-import PopNewCard from "./components/PopNewCard/PopNewCard";
-import PopUser from "./components/PopUser/PopUser";
+import PopBrowse from "./components/Popups/PopBrowse/PopBrowse";
+import PopNewCard from "./components/Popups/PopNewCard/PopNewCard";
+import PopUser from "./components/Popups/PopUser/PopUser";
 
 import "./App.css";
 
