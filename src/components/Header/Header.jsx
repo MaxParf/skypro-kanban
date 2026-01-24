@@ -1,29 +1,38 @@
+import { useState } from "react";
+import PopUser from "../Popups/PopUser/PopUser";
+
 export default function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   return (
     <header className="header">
       <div className="container">
         <div className="header__block">
           <div className="header__logo _show _light">
-            <a href="" target="_self">
-              <img src="/images/logo.png" alt="logo" />
-            </a>
+            <img src="/images/logo.png" alt="logo" />
           </div>
-          <div className="header__logo _show _dark">
-            <a href="" target="_self">
-              <img src="/images/logo_dark.png" alt="logo" />
-            </a>
-          </div>
+
           <nav className="header__nav">
-            <button className="header__btn-main-new _hover01" id="btnMainNew">
-              <a>Создать новую задачу</a>
+            <button className="header__btn-main-new _hover01">
+              Создать новую задачу
             </button>
-            <a href="#user-set-target" className="header__user _hover02">
+
+            <a
+              type="button"
+              className="header__user _hover02"
+              onClick={toggleMenu}
+            >
               Ivan Ivanov
             </a>
-            {/* Здесь будет PopUser, но пока оставляем верстку как есть */}
+
+            <PopUser isOpen={isOpen} />
           </nav>
         </div>
       </div>
     </header>
-  )
+  );
 }
