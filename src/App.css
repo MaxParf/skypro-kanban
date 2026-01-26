@@ -84,7 +84,7 @@ body {
 
 /* .pop-user-set {
   display: none;
-} */ 
+} */
 
 .pop-user-set:target,
 .pop-exit:target,
@@ -814,7 +814,7 @@ body {
 }
 
 .header__nav {
-  position: relative; 
+  position: relative;
   display: flex !important;
   align-items: center;
   max-width: 290px;
@@ -1239,7 +1239,7 @@ body {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 50vh; 
+  height: 50vh;
 }
 
 .loader-text {
