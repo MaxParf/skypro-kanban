@@ -7,7 +7,7 @@ function PopUser({ isOpen }) {
       <p className="pop-user-set__name">Ivan Ivanov</p>
       <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
 
-      <button>Выйти</button>
+      <button className="pop-user-set__button">Выйти</button>
     </div>
   );
 }

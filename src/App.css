@@ -1247,3 +1247,44 @@ body {
   font-weight: 700;
   color: #565EEF;
 }
+
+/* Web Design */
+._orange {
+  background-color: #FFE4C2;
+  color: #FF6D00;
+}
+
+/* Research */
+._green {
+  background-color: #B4FDD1;
+  color: #06B16E;
+}
+
+/* Copywriting */
+._purple {
+  background-color: #E9D4FF;
+  color: #9A48F1;
+}
+
+/* Календарь и текст даты */
+._gray {
+  background-color: #94A6BE;
+  color: #FFFFFF;
+}
+
+/* Кнопка модалки выйти */
+.pop-user-set__button {
+  width: 72px;
+  height: 30px;
+  background: transparent;
+  color: #565EEF;
+  border: 1px solid #565EEF;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.pop-user-set__button:hover {
+  background-color: #565EEF;
+  color: #FFFFFF;
+}
