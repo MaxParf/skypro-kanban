@@ -1,33 +1,52 @@
+import * as S from "./Card.styled";
+import { colors } from "../../theme"; // Импорт палитры
+
 export default function Card({ topic, title, date }) {
   
-  // 1. Создаем объект-словарь, где ключу (теме) соответствует нужный CSS-класс
+  // 1. Создаем объект-словарь, где ключу (теме) соответствует объект с цветами из theme.js
   const themeStyles = {
-    "Web Design": "_orange",
-    "Research": "_green",
-    "Copywriting": "_purple",
+    "Web Design": colors.topicOrange,
+    "Research": colors.topicGreen,
+    "Copywriting": colors.topicPurple,
   };
 
-  // 2. Определяем класс для текущей карточки. 
-  // Если темы нет в списке, подставится стандартный (например, _gray)
-  const colorClass = themeStyles[topic] || "_gray";
+  // 2. Определяем набор цветов для текущей карточки. 
+  // Если темы нет в списке, подставится стандартный (gray)
+  const currentColor = themeStyles[topic] || colors.topicGray;
 
   return (
-    <div className="cards__item">
-      <div className="cards__card card">
-        <div className="card__group">
-          {/* Здесь можно добавить логику выбора цвета в зависимости от темы */}
-          <div className={`card__theme ${colorClass}`}>
-            <p className={colorClass}>{topic}</p>
-          </div>
-        </div>
-        <div className="card__content">
-          <h3 className="card__title">{title}</h3>
-          <div className="card__date">
-            <svg>...</svg>
+    <S.CardItem>
+      <S.CardWrapper>
+        <S.CardGroup>
+          {/* Передаем объект с цветами в пропс $colorObj */}
+          <S.CardTheme $colorObj={currentColor}>
+            <p>{topic}</p>
+          </S.CardTheme>
+        </S.CardGroup>
+        <S.CardContent>
+          <S.CardTitle>{title}</S.CardTitle>
+          <S.CardDate>
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 13 13"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6.5 11.5C9.26142 11.5 11.5 9.26142 11.5 6.5C11.5 3.73858 9.26142 1.5 6.5 1.5C3.73858 1.5 1.5 3.73858 1.5 6.5C1.5 9.26142 3.73858 11.5 6.5 11.5Z"
+                stroke="#94A6BE"
+              />
+              <path
+                d="M6.5 3.5V6.5L8 8"
+                stroke="#94A6BE"
+                strokeLinecap="round"
+              />
+            </svg>
             <p>{date}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+          </S.CardDate>
+        </S.CardContent>
+      </S.CardWrapper>
+    </S.CardItem>
   );
 }
