@@ -1,19 +1,22 @@
 import Calendar from "../../Calendar/Calendar";
+import * as S from "./PopNewCard.styled";
 
 function PopNewCard() {
   return (
-    <div className="pop-new-card" id="popNewCard">
-      <div className="pop-new-card__container">
-        <h3>Создание задачи</h3>
-        <form className="pop-new-card__form">
-          <input placeholder="Название задачи" />
-          <textarea placeholder="Описание"></textarea>
-        </form>
-        <Calendar />
-        <button>Создать задачу</button>
-      </div>
-    </div>
-  )
+    <S.PopNewCard id="popNewCard">
+      <S.PopNewCardContainer>
+        <S.PopNewCardBlock>
+          <S.PopNewCardTtl>Создание задачи</S.PopNewCardTtl>
+          <S.PopNewCardForm>
+            <input placeholder="Название задачи" />
+            <textarea placeholder="Описание"></textarea>
+          </S.PopNewCardForm>
+          <Calendar />
+          <button>Создать задачу</button>
+        </S.PopNewCardBlock>
+      </S.PopNewCardContainer>
+    </S.PopNewCard>
+  );
 }
 
 export default PopNewCard;
