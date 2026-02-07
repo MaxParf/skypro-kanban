@@ -5,39 +5,44 @@ import PopBrowse from "./components/Popups/PopBrowse/PopBrowse";
 import PopNewCard from "./components/Popups/PopNewCard/PopNewCard";
 // import PopUser from "./components/Popups/PopUser/PopUser"; переезжает в Хидер
 import { cardList } from "./data";
+import { GlobalStyle } from "./GlobalStyle.styled"; // Все базовые стили
+import * as S from "./App.styled";
 
-import "./App.css";
+
+// import "./App.css";
 
 function App() {
-  const [cards, setCards] = useState([]); // Состояние для карточек
-  const [isLoading, setIsLoading] = useState(true); // Состояние загрузки
+  const [cards, setCards] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Имитация загрузки через 2 секунды
     const timer = setTimeout(() => {
-      setCards(cardList); // Записываем данные в состояние
-      setIsLoading(false); // Выключаем лоадер
+      setCards(cardList);
+      setIsLoading(false);
     }, 2000);
 
-    return () => clearTimeout(timer); // Очистка таймера
+    return () => clearTimeout(timer);
   }, []);
 
   return (
-    <div className="wrapper">
-      {/* PopUser теперь внутри Header, здесь его нет */}
-      <PopNewCard />
-      <PopBrowse />
-      <Header />
+    <>
+      <GlobalStyle /> {/* Применяется ко всему приложению */}
+      <S.Wrapper> 
+        {/* Оставляем только нужные компоненты */}
+        <PopNewCard />
+        <PopBrowse />
+        <Header />
 
-      {/* Рендерим либо загрузку, либо основной контент */}
-      {isLoading ? (
-        <div className="loader-container">
-          <p className="loader-text">Данные загружаются...</p>
-        </div>
-      ) : (
-        <Main cards={cards} /> 
-      )}
-    </div>
+        {/* Условный рендеринг */}
+        {isLoading ? (
+          <div className="loader-container">
+            <p className="loader-text">Данные загружаются...</p>
+          </div>
+        ) : (
+          <Main cards={cards} /> 
+        )}
+      </S.Wrapper>
+    </>
   );
 }
 
