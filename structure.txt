@@ -1,0 +1,92 @@
+.
+├── README.md
+├── css
+│   ├── main.css
+│   ├── main.css.backup
+│   ├── main.css.map
+│   ├── main.scss
+│   ├── main_dark.css
+│   ├── signin.css
+│   ├── signin.css.map
+│   ├── signin.scss
+│   ├── signin_dark.css
+│   ├── signup.css
+│   ├── signup.css.map
+│   ├── signup.scss
+│   └── signup_dark.css
+├── eslint.config.js
+├── index.html
+├── js
+│   └── script.js
+├── main.html.backup
+├── modal
+│   ├── signin.html
+│   └── signup.html
+├── package-lock.json
+├── package.json
+├── public
+│   ├── images
+│   │   ├── logo.png
+│   │   └── logo_dark.png
+│   └── vite.svg
+├── src
+│   ├── App.css
+│   ├── App.jsx
+│   ├── App.styled.js
+│   ├── AppRoutes.jsx
+│   ├── GlobalStyle.styled.js
+│   ├── ProtectedRoute.jsx
+│   ├── assets
+│   │   └── react.svg
+│   ├── components
+│   │   ├── Calendar
+│   │   │   └── Calendar.jsx
+│   │   ├── Card
+│   │   │   ├── Card.jsx
+│   │   │   └── Card.styled.js
+│   │   ├── Column
+│   │   │   ├── Column.jsx
+│   │   │   └── Column.styled.js
+│   │   ├── Header
+│   │   │   ├── Header.jsx
+│   │   │   └── Header.styled.js
+│   │   ├── Main
+│   │   │   ├── Main.jsx
+│   │   │   └── Main.styled.js
+│   │   └── Popups
+│   │       ├── PopBrowse
+│   │       │   ├── PopBrowse.jsx
+│   │       │   └── PopBrowse.styled.js
+│   │       ├── PopNewCard
+│   │       │   ├── PopNewCard.jsx
+│   │       │   └── PopNewCard.styled.js
+│   │       └── PopUser
+│   │           └── PopUser.jsx
+│   ├── data.js
+│   ├── index.css
+│   ├── main.jsx
+│   ├── pages
+│   │   ├── AddTask
+│   │   │   └── AddTask.jsx
+│   │   ├── Card
+│   │   │   └── Card.jsx
+│   │   ├── Exit
+│   │   │   ├── Exit.jsx
+│   │   │   └── Exit.styled.js
+│   │   ├── Login
+│   │   │   ├── Login.jsx
+│   │   │   └── Login.styled.js
+│   │   ├── Main
+│   │   │   ├── Main.jsx
+│   │   │   └── Main.styled.js
+│   │   ├── NotFound
+│   │   │   ├── NotFound.jsx
+│   │   │   └── NotFound.styled.js
+│   │   └── Register
+│   │       ├── Register.jsx
+│   │       └── Register.styled.js
+│   └── theme.js
+├── structure.txt
+└── vite.config.js
+
+26 directories, 64 files
