@@ -1,25 +1,31 @@
-import * as S from "./Header.styled"; // Импортируем все стили как объект S
+import { Link } from "react-router-dom";
+import * as S from "./Header.styled";
 
 export default function Header() {
   return (
     <S.HeaderWrapper>
       <S.HeaderContainer>
         <S.HeaderBlock>
-          {/* Логотип */}
           <S.HeaderLogo>
-            <a href="" target="_self">
+            <Link to="/">
               <img src="images/logo.png" alt="logo" />
-            </a>
+            </Link>
           </S.HeaderLogo>
 
-          {/* Навигация */}
           <S.HeaderNav>
-            <S.HeaderButton id="btnMainNew">
-              Создать новую задачу
-            </S.HeaderButton>
-            <S.HeaderUser>
-              Ivan Ivanov
-            </S.HeaderUser>
+            {/* 1. Клик по кнопке теперь ведет на /add-task */}
+            <Link to="/add-task">
+              <S.HeaderButton id="btnMainNew">
+                Создать новую задачу
+              </S.HeaderButton>
+            </Link>
+
+            {/* 2. Клик по пользователю теперь ведет на /exit */}
+            <Link to="/exit">
+              <S.HeaderUser as="span">
+                Ivan Ivanov
+              </S.HeaderUser>
+            </Link>
           </S.HeaderNav>
         </S.HeaderBlock>
       </S.HeaderContainer>

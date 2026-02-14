@@ -8,10 +8,10 @@ export default function Column({ title, cards }) {
         <p>{title}</p>
       </S.ColumnTitle>
       <S.ColumnCards>
-        {/* Итерируем по массиву карточек, который пришел из Main */}
         {cards.map((card) => ( 
           <Card 
-            key={card.id} // Критерий: уникальный ID в key
+            key={card.id} 
+            id={card.id} // передаем id
             topic={card.topic} 
             title={card.title} 
             date={card.date} 
