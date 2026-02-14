@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
-
-import Header from "../../components/Header/Header";
-import MainContent from "../../components/Main/Main";
-import PopBrowse from "../../components/Popups/PopBrowse/PopBrowse";
-import PopNewCard from "../../components/Popups/PopNewCard/PopNewCard";
-
-import { cardList } from "../../data";
-import { GlobalStyle } from "../../GlobalStyle.styled";
-import * as S from "../../App.styled";
+import { Outlet } from "react-router-dom"; // [cite: 92]
+import Header from "../../components/Header/Header"; // [cite: 92]
+import MainContent from "../../components/Main/Main"; // [cite: 92]
+import { cardList } from "../../data"; // [cite: 94]
+import { GlobalStyle } from "../../GlobalStyle.styled"; // [cite: 94]
+import * as S from "../../App.styled"; // [cite: 94]
 
 export default function Main() {
   const [cards, setCards] = useState([]);
@@ -18,7 +15,6 @@ export default function Main() {
       setCards(cardList);
       setIsLoading(false);
     }, 2000);
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -26,8 +22,9 @@ export default function Main() {
     <>
       <GlobalStyle />
       <S.Wrapper>
-        <PopNewCard />
-        <PopBrowse />
+        {/* Модалки (AddTask, CardPage, Exit) рендерим здесь */}
+        <Outlet /> 
+        
         <Header />
 
         {isLoading ? (
