@@ -1,31 +1,56 @@
-import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom"; // [cite: 92]
-import Header from "../../components/Header/Header"; // [cite: 92]
-import MainContent from "../../components/Main/Main"; // [cite: 92]
-import { cardList } from "../../data"; // [cite: 94]
-import { GlobalStyle } from "../../GlobalStyle.styled"; // [cite: 94]
-import * as S from "../../App.styled"; // [cite: 94]
+import { useState, useEffect, useCallback } from "react";
+import { Outlet } from "react-router-dom"; 
+import Header from "../../components/Header/Header"; 
+import MainContent from "../../components/Main/Main"; 
+import { getTasks } from "../../api/tasks"; // Импорт функции запроса
+import { GlobalStyle } from "../../GlobalStyle.styled"; 
+import * as S from "../../App.styled"; 
 
 export default function Main() {
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null); // Состояние для ошибок
+
+  // Выносим функцию загрузки, чтобы её можно было передать в Outlet
+  const fetchTasks = useCallback(async () => {
+    // Данные пользователя из localStorage, чтобы получить токен
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = user?.token;
+
+    if (!token) {
+      setError("Необходима авторизация");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const data = await getTasks({ token });
+      setCards(data.tasks);
+      setError(null); // Очищаем ошибку при успешной загрузке
+    } catch (err) {
+      setError(err.message);
+      console.error("Ошибка при загрузке задач:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setCards(cardList);
-      setIsLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
+    fetchTasks();
+  }, [fetchTasks]);
 
   return (
     <>
       <GlobalStyle />
       <S.Wrapper>
-        {/* Модалки (AddTask, CardPage, Exit) рендерим здесь */}
-        <Outlet /> 
+        {/* Рендер модалок (AddTask, CardPage, Exit) */}
+        {/* Добавлена правка: передаем cards в context, чтобы PopBrowse мог найти задачу по ID */}
+        <Outlet context={{ cards, fetchTasks }} /> 
         
         <Header />
+
+        {error && <p style={{ color: "red", textAlign: "center", marginTop: "20px" }}>{error}</p>}
 
         {isLoading ? (
           <div className="loader-container">
