@@ -1,18 +1,31 @@
 import styled from "styled-components";
 
+const topicStyles = {
+  "Web Design": {
+    bg: "#FFE4C2",
+    text: "#FF6D00",
+  },
+  "Research": {
+    bg: "#B4FDD1",
+    text: "#06B16E",
+  },
+  "Copywriting": {
+    bg: "#E9D4FF",
+    text: "#9A48F1",
+  },
+};
+
 export const PopNewCard = styled.div`
-  display: flex; 
   width: 100%;
   height: 100%;
-  min-width: 375px;
-  min-height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 100;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
 `;
 
 export const PopNewCardContainer = styled.div`
@@ -21,11 +34,10 @@ export const PopNewCardContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 16px;
 `;
 
 export const PopNewCardBlock = styled.div`
-  display: block;
-  margin: 0 auto;
   background-color: #FFFFFF;
   max-width: 630px;
   width: 100%;
@@ -35,110 +47,109 @@ export const PopNewCardBlock = styled.div`
   position: relative;
 `;
 
-// Заголовок "Создание задачи"
 export const PopNewCardTtl = styled.h3`
-  font-family: "Roboto", sans-serif;
-  font-weight: 600;
   font-size: 20px;
-  line-height: 100%;
-  letter-spacing: 0px;
-  color: #000;
+  font-weight: 600;
   margin-bottom: 20px;
+  color: #000;
+`;
+
+export const PopNewCardWrap = styled.div`
+  display: flex;
+  gap: 20px;
 `;
 
 export const PopNewCardForm = styled.form`
-  max-width: 370px;
-  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+export const FormNewBlock = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-// Подзаголовки (Описание, Даты)
 export const Subttl = styled.label`
-  font-family: "Roboto", sans-serif;
   font-weight: 600;
   font-size: 14px;
-  line-height: 100%;
-  letter-spacing: 0px;
-  color: #000000;
   margin-bottom: 14px;
-  margin-top: 10px;
+  color: #000;
 `;
 
-// Инпут названия задачи
 export const PopNewCardInput = styled.input`
-  width: 370px;
-  height: 49px;
+  width: 100%;
+  padding: 14px;
   border-radius: 8px;
   border: 0.7px solid #D4DBE5;
-  padding: 14px;
   outline: none;
-  margin-bottom: 20px;
-
-  &::placeholder {
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 150%;
-    letter-spacing: -0.01em;
-    color: #94A6BE;
-  }
+  &::placeholder { color: #94A6BE; }
 `;
 
-// Инпут описания задачи
 export const PopNewCardArea = styled.textarea`
-  width: 370px;
+  width: 100%;
   height: 200px;
+  padding: 14px;
   border-radius: 8px;
   border: 0.7px solid #D4DBE5;
-  padding: 14px;
-  outline: none;
   resize: none;
+  outline: none;
+  &::placeholder { color: #94A6BE; }
+`;
 
-  &::placeholder {
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
+export const PopNewCardCalendar = styled.div`
+  width: 182px;
+`;
+
+export const CalendarPeriodText = styled.p`
+  font-size: 10px;
+  color: #94A6BE;
+  margin-top: 8px;
+  span { color: #000; font-weight: 600; }
+`;
+
+export const PopNewCardCategories = styled.div`
+  margin-top: 20px;
+`;
+
+export const CategoriesThemes = styled.div`
+  display: flex;
+  padding-top: 14px;
+  gap: 10px;
+`;
+
+export const CategoriesTheme = styled.div`
+  padding: 8px 20px;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: ${({ $topic }) => topicStyles[$topic]?.bg || "#EDEFF6"};
+  opacity: ${({ $active }) => ($active ? "1" : "0.4")};
+
+  p {
     font-size: 14px;
-    line-height: 100%;
-    letter-spacing: -0.01em;
-    color: #94A6BE;
+    font-weight: 600;
+    color: ${({ $topic }) => topicStyles[$topic]?.text || "#94A6BE"};
+  }
+
+  &:hover {
+    opacity: 1;
   }
 `;
 
-// Сентябрь 2023
-export const CalendarMonth = styled.span`
-  font-family: "Roboto", sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 100%;
-  letter-spacing: 0px;
-  color: #94A6BE;
-`;
-
-// Кнопка "Создать задачу"
 export const PopNewCardBtnAction = styled.button`
   width: 132px;
   height: 30px;
+  background-color: #565EEF;
+  color: white;
   border-radius: 4px;
-  padding: 10px 14px;
-  background: #565EEF;
   border: none;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   margin-top: 20px;
-
+  float: right;
+  font-weight: 500;
   &:hover {
     background-color: #33399b;
   }
-`;
-
-export const BtnText = styled.span`
-  font-family: "Roboto", sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 10px;
-  text-align: center;
-  color: #FFFFFF;
 `;

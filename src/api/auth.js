@@ -1,27 +1,29 @@
-import axios from "axios";
-
 const USER_URL = "https://wedev-api.sky.pro/api/user";
 
+// ФУНКЦИЯ ВХОДА
 export async function signIn({ login, password }) {
-  try {
-    const response = await axios.post(`${USER_URL}/login`, { login, password }, {
-      headers: { "Content-Type": null }
-    });
-    return response.data.user;
-  } catch (error) {
-    throw new Error(error.response?.data?.error || "Неверный логин или пароль");
+  const response = await fetch(`${USER_URL}/login`, {
+    method: "POST",
+    body: JSON.stringify({ login, password }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || "Ошибка авторизации");
   }
+  return data; // Возвращаем { user, token }
 }
 
+// ФУНКЦИЯ РЕГИСТРАЦИИ (Добавили обратно, чтобы Register.jsx не ругался)
 export async function signUp({ login, name, password }) {
-  try {
-    const response = await axios.post(USER_URL, { login, name, password }, {
-      headers: { 
-        "Content-Type": null // Исправляет ошибку 400 на скриншоте
-      }
-    });
-    return response.data.user;
-  } catch (error) {
-    throw new Error(error.response?.data?.error || "Ошибка при регистрации");
+  const response = await fetch(USER_URL, {
+    method: "POST",
+    body: JSON.stringify({ login, name, password }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || "Ошибка при регистрации");
   }
+  return data; // Возвращаем { user, token }
 }

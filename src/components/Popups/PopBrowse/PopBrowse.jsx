@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate, useParams, useOutletContext } from "react-router-dom";
 import { deleteTask, editTask } from "../../../api/tasks";
 import * as S from "./PopBrowse.styled";
+import { Calendar } from "../../Calendar/Calendar";
+import { format } from "date-fns";
 
 function PopBrowse() {
   const { id } = useParams();
@@ -11,6 +13,8 @@ function PopBrowse() {
   const currentCard = cards ? cards.find((card) => card._id === id) : null;
 
   const [isEdit, setIsEdit] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(currentCard?.date ? new Date(currentCard.date) : new Date());
+  
   const [editedTask, setEditedTask] = useState({
     title: currentCard?.title || "",
     description: currentCard?.description || "",
@@ -26,7 +30,11 @@ function PopBrowse() {
   const handleEditSave = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
     try {
-      await editTask({ token: user?.token, id, taskData: editedTask });
+      await editTask({ 
+        token: user?.token, 
+        id, 
+        taskData: { ...editedTask, date: selectedDate } 
+      });
       await fetchTasks();
       setIsEdit(false);
     } catch (err) {
@@ -56,7 +64,6 @@ function PopBrowse() {
           <S.PopBrowseContent>
             <S.PopBrowseTopBlock>
               <S.PopBrowseTtl>{isEdit ? editedTask.title : currentCard.title}</S.PopBrowseTtl>
-              {/* Категория (Topic) справа как на макете */}
               <S.TopicText $topic={currentCard.topic}>{currentCard.topic}</S.TopicText>
             </S.PopBrowseTopBlock>
 
@@ -96,7 +103,19 @@ function PopBrowse() {
                   />
                 </S.FormBrowseBlock>
               </S.PopBrowseForm>
-              {/* Место для календаря будет здесь */}
+
+              {/* Календарь справа согласно макету */}
+              <S.PopBrowseCalendar>
+                <S.StatusTtl>Даты</S.StatusTtl>
+                <Calendar 
+                  selected={selectedDate} 
+                  setSelected={isEdit ? setSelectedDate : () => {}} 
+                />
+                <S.CalendarPeriod>
+                  <p>Срок исполнения: <span>{format(selectedDate, "dd.MM.yy")}</span></p>
+                </S.CalendarPeriod>
+              </S.PopBrowseCalendar>
+
             </S.PopBrowseWrap>
 
             <S.PopBrowseBtnBlock>

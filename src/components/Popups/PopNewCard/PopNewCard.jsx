@@ -1,110 +1,104 @@
 import { useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { postTask } from "../../../api/tasks"; // Импорт функции добавления
-import Calendar from "../../Calendar/Calendar";
+import { postTask } from "../../../api/tasks";
+import Calendar from "../../Calendar/Calendar"; 
 import * as S from "./PopNewCard.styled";
 
 function PopNewCard() {
   const navigate = useNavigate();
-  const { fetchTasks } = useOutletContext(); // Получаем функцию обновления из Main.jsx
+  const { fetchTasks } = useOutletContext();
 
-  // Состояние для полей формы (двустороннее связывание по конспекту)
-  const [newTask, setNewTask] = useState({
-    title: "",
-    topic: "",
-    description: "",
-  });
-
-  const [selectedDate, setSelectedDate] = useState(new Date()); // Состояние для календаря
+  const [newTask, setNewTask] = useState({ title: "", topic: "", description: "" });
+  const [selectedDate, setSelectedDate] = useState(null);
   const [error, setError] = useState("");
 
-  // Функция отслеживания изменений в полях
+  const topics = ["Web Design", "Research", "Copywriting"];
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewTask({
-      ...newTask,
-      [name]: value,
-    });
+    setNewTask((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Функция отправки формы
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
-    // Валидация
-    if (!newTask.title.trim() || !newTask.topic || !newTask.description.trim()) {
+    if (!newTask.title.trim() || !newTask.topic || !newTask.description.trim() || !selectedDate) {
       setError("Заполните все поля и выберите категорию");
       return;
     }
 
-    const user = JSON.parse(localStorage.getItem("user"));
-    const token = user?.token;
-
+    const token = localStorage.getItem("token");
     try {
-      const taskData = {
-        ...newTask,
-        date: selectedDate,
-      };
-
-      await postTask({ token, taskData }); // Отправка на сервер
-      await fetchTasks(); // Обновление списка задач
-      navigate("/"); // Закрываем модалку
+      const taskData = { ...newTask, date: selectedDate.toISOString() };
+      await postTask({ token, taskData });
+      await fetchTasks();
+      navigate("/");
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Ошибка при создании задачи");
     }
   };
 
   return (
-    <S.PopNewCard id="popNewCard">
+    <S.PopNewCard onClick={() => navigate("/")}>
       <S.PopNewCardContainer>
-        <S.PopNewCardBlock>
+        <S.PopNewCardBlock onClick={(e) => e.stopPropagation()}>
           <S.PopNewCardTtl>Создание задачи</S.PopNewCardTtl>
           
-          <S.PopNewCardForm onSubmit={handleFormSubmit}>
-            <S.PopNewCardInput 
-              name="title"
-              value={newTask.title}
-              onChange={handleInputChange}
-              placeholder="Введите название задачи..." 
-            />
-            
-            <S.Subttl>Описание задачи</S.Subttl>
-            <S.PopNewCardArea 
-              name="description"
-              value={newTask.description}
-              onChange={handleInputChange}
-              placeholder="Введите описание задачи..." 
-            />
-          </S.PopNewCardForm>
-
-          <S.Subttl>Категория:</S.Subttl>
-          <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-            {["Web Design", "Research", "Copywriting"].map((t) => (
-              <label key={t} style={{ cursor: "pointer", color: newTask.topic === t ? "orange" : "inherit" }}>
-                <input 
-                  type="radio" 
-                  name="topic" 
-                  value={t} 
+          <S.PopNewCardWrap>
+            <S.PopNewCardForm onSubmit={handleFormSubmit}>
+              <S.FormNewBlock>
+                <S.Subttl>Название задачи</S.Subttl>
+                <S.PopNewCardInput 
+                  name="title" 
+                  value={newTask.title} 
                   onChange={handleInputChange} 
-                  style={{ display: "none" }}
+                  placeholder="Введите название задачи..." 
                 />
-                {t}
-              </label>
-            ))}
-          </div>
+              </S.FormNewBlock>
+              <S.FormNewBlock>
+                <S.Subttl>Описание задачи</S.Subttl>
+                <S.PopNewCardArea 
+                  name="description" 
+                  value={newTask.description} 
+                  onChange={handleInputChange} 
+                  placeholder="Введите описание задачи..." 
+                />
+              </S.FormNewBlock>
+            </S.PopNewCardForm>
 
-          <S.Subttl>Даты:</S.Subttl>
-          <Calendar selected={selectedDate} setSelect={setSelectedDate} />
+            <S.PopNewCardCalendar>
+              <S.Subttl>Даты</S.Subttl>
+              <Calendar selected={selectedDate} setSelect={setSelectedDate} />
+              <S.CalendarPeriodText>
+                {!selectedDate ? (
+                  "Выберите срок исполнения."
+                ) : (
+                  <>Срок исполнения: <span>{selectedDate.toLocaleDateString('ru-RU')}</span></>
+                )}
+              </S.CalendarPeriodText>
+            </S.PopNewCardCalendar>
+          </S.PopNewCardWrap>
 
-          {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
+          <S.PopNewCardCategories>
+            <S.Subttl>Категория</S.Subttl>
+            <S.CategoriesThemes>
+              {topics.map((t) => (
+                <S.CategoriesTheme 
+                  key={t} 
+                  $topic={t} 
+                  $active={newTask.topic === t} 
+                  onClick={() => setNewTask(prev => ({ ...prev, topic: t }))}
+                >
+                  <p>{t}</p>
+                </S.CategoriesTheme>
+              ))}
+            </S.CategoriesThemes>
+          </S.PopNewCardCategories>
 
-          <S.PopNewCardBtnAction onClick={handleFormSubmit}>
-            <S.BtnText>Создать задачу</S.BtnText>
-          </S.PopNewCardBtnAction>
+          {error && <p style={{ color: "red", fontSize: "12px", marginTop: "10px" }}>{error}</p>}
           
-          <button onClick={() => navigate("/")} style={{ marginTop: "10px", background: "none", border: "none", cursor: "pointer" }}>
-            Отмена
-          </button>
+          <S.PopNewCardBtnAction onClick={handleFormSubmit}>
+            Создать задачу
+          </S.PopNewCardBtnAction>
           
         </S.PopNewCardBlock>
       </S.PopNewCardContainer>

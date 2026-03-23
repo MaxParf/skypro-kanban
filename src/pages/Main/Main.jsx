@@ -13,28 +13,26 @@ export default function Main() {
 
   // Выносим функцию загрузки, чтобы её можно было передать в Outlet
   const fetchTasks = useCallback(async () => {
-    // Данные пользователя из localStorage, чтобы получить токен
-    const user = JSON.parse(localStorage.getItem("user"));
-    const token = user?.token;
+  const token = localStorage.getItem("token"); 
 
-    if (!token) {
-      setError("Необходима авторизация");
-      setIsLoading(false);
-      return;
-    }
+  if (!token) {
+    setError("Необходима авторизация");
+    setIsLoading(false);
+    return;
+  }
 
-    try {
-      setIsLoading(true);
-      const data = await getTasks({ token });
-      setCards(data.tasks);
-      setError(null); // Очищаем ошибку при успешной загрузке
-    } catch (err) {
-      setError(err.message);
-      console.error("Ошибка при загрузке задач:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  try {
+    setIsLoading(true);
+    const data = await getTasks({ token });
+    
+    setCards(data.tasks || []); 
+    setError(null);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setIsLoading(false);
+  }
+}, []);
 
   useEffect(() => {
     fetchTasks();

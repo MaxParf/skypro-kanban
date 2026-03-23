@@ -26,29 +26,32 @@ export default function Login({ setIsAuth }) {
 
   // Отправка формы
   const handleLogin = async (e) => {
-    e.preventDefault(); // Чтобы страница не перезагружалась при клике
+    e.preventDefault();
 
-    // Валидация перед отправкой
     if (!formData.login.trim() || !formData.password.trim()) {
       setError("Заполните все поля");
       return;
     }
 
     try {
-      // Вызов API запроса
       const data = await signIn({
         login: formData.login,
         password: formData.password,
       });
 
-      if (data) {
-        // Если ОК: сохраняем пользователя и меняем статус
-        localStorage.setItem("user", JSON.stringify(data));
+      // ИСПРАВЛЕНИЕ: В Skypro API токен обычно лежит в data.user.token
+      // Проверяем наличие объекта user и токена внутри него
+      if (data && data.user && data.user.token) {
+        // Сохраняем данные пользователя и токен отдельно для удобства Main.jsx
+        localStorage.setItem("user", JSON.stringify(data.user)); 
+        localStorage.setItem("token", data.user.token);
+        
         setIsAuth(true);
         navigate("/");
+      } else {
+        setError("Ошибка: сервер не прислал токен доступа");
       }
     } catch (err) {
-      // Если вернул ошибку выводим её например 401
       setError(err.message);
     }
   };
