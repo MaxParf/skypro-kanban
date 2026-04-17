@@ -120,6 +120,25 @@ export const FormBrowseArea = styled.textarea`
   &[readonly] { color: #94A6BE; }
 `;
 
+export const PopBrowseCalendar = styled.div`
+  width: 182px;
+`;
+
+export const CalendarPeriod = styled.div`
+  margin-top: 8px;
+
+  p {
+    color: #94A6BE;
+    font-size: 10px;
+    line-height: 13px;
+  }
+
+  span {
+    color: #000;
+    font-weight: 600;
+  }
+`;
+
 export const PopBrowseBtnBlock = styled.div`
   display: flex;
   justify-content: space-between;
@@ -137,6 +156,17 @@ const BaseBtn = styled.button`
   padding: 0 14px;
   font-size: 14px;
   cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+`;
+
+export const ActionError = styled.p`
+  color: #ff0000;
+  font-size: 12px;
+  margin-top: 12px;
 `;
 
 export const BtnEdit = styled(BaseBtn)`

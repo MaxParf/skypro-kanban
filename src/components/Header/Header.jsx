@@ -2,28 +2,34 @@ import { Link } from "react-router-dom";
 import * as S from "./Header.styled";
 
 export default function Header() {
+  let user = {};
+
+  try {
+    user = JSON.parse(localStorage.getItem("user") || "{}");
+  } catch {
+    user = {};
+  }
+
+  const userName = user.name || user.login || "Пользователь";
+
   return (
     <S.HeaderWrapper>
       <S.HeaderContainer>
         <S.HeaderBlock>
           <S.HeaderLogo>
             <Link to="/">
-              <img src="images/logo.png" alt="logo" />
+              <img src="/images/logo.png" alt="logo" />
             </Link>
           </S.HeaderLogo>
 
           <S.HeaderNav>
-            {/* 1. Клик по кнопке теперь ведет на /add-task */}
-            <Link to="/add-task">
-              <S.HeaderButton id="btnMainNew">
-                Создать новую задачу
-              </S.HeaderButton>
-            </Link>
+            <S.HeaderButton as={Link} to="/add-task" id="btnMainNew">
+              Создать новую задачу
+            </S.HeaderButton>
 
-            {/* 2. Клик по пользователю теперь ведет на /exit */}
             <Link to="/exit">
               <S.HeaderUser as="span">
-                Ivan Ivanov
+                {userName}
               </S.HeaderUser>
             </Link>
           </S.HeaderNav>

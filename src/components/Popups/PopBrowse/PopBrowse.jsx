@@ -1,19 +1,43 @@
 import { useState } from "react";
-import { useNavigate, useParams, useOutletContext } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { deleteTask, editTask } from "../../../api/tasks";
 import * as S from "./PopBrowse.styled";
 import { Calendar } from "../../Calendar/Calendar";
 import { format } from "date-fns";
+import { useTasks } from "../../../context/useTasks";
+
+const getCardDate = (date) => {
+  const parsedDate = date ? new Date(date) : new Date();
+  return Number.isNaN(parsedDate.getTime()) ? new Date() : parsedDate;
+};
 
 function PopBrowse() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { cards, fetchTasks } = useOutletContext();
+  const { cards, fetchTasks } = useTasks();
 
   const currentCard = cards ? cards.find((card) => card._id === id) : null;
 
+  if (!currentCard) return null;
+
+  return (
+    <PopBrowseDetails
+      key={currentCard._id}
+      currentCard={currentCard}
+      fetchTasks={fetchTasks}
+      id={id}
+      navigate={navigate}
+    />
+  );
+}
+
+function PopBrowseDetails({ currentCard, fetchTasks, id, navigate }) {
+
   const [isEdit, setIsEdit] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(currentCard?.date ? new Date(currentCard.date) : new Date());
+  const [selectedDate, setSelectedDate] = useState(getCardDate(currentCard?.date));
+  const [actionError, setActionError] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   
   const [editedTask, setEditedTask] = useState({
     title: currentCard?.title || "",
@@ -24,38 +48,57 @@ function PopBrowse() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setEditedTask({ ...editedTask, [name]: value });
+    setEditedTask((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditCancel = () => {
+    if (currentCard) {
+      setSelectedDate(getCardDate(currentCard.date));
+      setEditedTask({
+        title: currentCard.title || "",
+        description: currentCard.description || "",
+        status: currentCard.status || "",
+        topic: currentCard.topic || "",
+      });
+    }
+    setIsEdit(false);
   };
 
   const handleEditSave = async () => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
     try {
+      setIsSaving(true);
+      setActionError("");
       await editTask({ 
-        token: user?.token, 
-        id, 
-        taskData: { ...editedTask, date: selectedDate } 
+        token,
+        id,
+        taskData: { ...editedTask, date: selectedDate.toISOString() }
       });
       await fetchTasks();
       setIsEdit(false);
     } catch (err) {
-      alert("Ошибка при сохранении: " + err.message);
+      setActionError("Ошибка при сохранении: " + err.message);
+    } finally {
+      setIsSaving(false);
     }
   };
 
   const handleDeleteTask = async () => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
     if (window.confirm("Вы уверены, что хотите удалить задачу?")) {
       try {
-        await deleteTask({ token: user?.token, id });
+        setIsDeleting(true);
+        setActionError("");
+        await deleteTask({ token, id });
         await fetchTasks();
         navigate("/");
       } catch (err) {
-        alert("Ошибка при удалении: " + err.message);
+        setActionError("Ошибка при удалении: " + err.message);
+      } finally {
+        setIsDeleting(false);
       }
     }
   };
-
-  if (!currentCard) return null;
 
   return (
     <S.PopBrowse>
@@ -109,7 +152,7 @@ function PopBrowse() {
                 <S.StatusTtl>Даты</S.StatusTtl>
                 <Calendar 
                   selected={selectedDate} 
-                  setSelected={isEdit ? setSelectedDate : () => {}} 
+                  setSelect={isEdit ? setSelectedDate : () => {}}
                 />
                 <S.CalendarPeriod>
                   <p>Срок исполнения: <span>{format(selectedDate, "dd.MM.yy")}</span></p>
@@ -118,20 +161,28 @@ function PopBrowse() {
 
             </S.PopBrowseWrap>
 
+            {actionError && <S.ActionError>{actionError}</S.ActionError>}
+
             <S.PopBrowseBtnBlock>
               {isEdit ? (
                 <S.BtnGroup>
-                  <S.BtnEdit onClick={handleEditSave}>Сохранить</S.BtnEdit>
-                  <S.BtnDelete onClick={() => setIsEdit(false)}>Отмена</S.BtnDelete>
-                  <S.BtnDelete onClick={handleDeleteTask}>Удалить задачу</S.BtnDelete>
+                  <S.BtnEdit onClick={handleEditSave} disabled={isSaving || isDeleting}>
+                    {isSaving ? "Сохранение..." : "Сохранить"}
+                  </S.BtnEdit>
+                  <S.BtnDelete onClick={handleEditCancel} disabled={isSaving || isDeleting}>Отмена</S.BtnDelete>
+                  <S.BtnDelete onClick={handleDeleteTask} disabled={isSaving || isDeleting}>
+                    {isDeleting ? "Удаление..." : "Удалить задачу"}
+                  </S.BtnDelete>
                 </S.BtnGroup>
               ) : (
                 <S.BtnGroup>
-                  <S.BtnEdit onClick={() => setIsEdit(true)}>Редактировать задачу</S.BtnEdit>
-                  <S.BtnDelete onClick={handleDeleteTask}>Удалить задачу</S.BtnDelete>
+                  <S.BtnEdit onClick={() => setIsEdit(true)} disabled={isDeleting}>Редактировать задачу</S.BtnEdit>
+                  <S.BtnDelete onClick={handleDeleteTask} disabled={isDeleting}>
+                    {isDeleting ? "Удаление..." : "Удалить задачу"}
+                  </S.BtnDelete>
                 </S.BtnGroup>
               )}
-              <S.BtnClose onClick={() => navigate("/")}>Закрыть</S.BtnClose>
+              <S.BtnClose onClick={() => navigate("/")} disabled={isSaving || isDeleting}>Закрыть</S.BtnClose>
             </S.PopBrowseBtnBlock>
           </S.PopBrowseContent>
         </S.PopBrowseBlock>

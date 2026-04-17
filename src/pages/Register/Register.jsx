@@ -15,6 +15,7 @@ export default function Register({ setIsAuth }) {
 
   // Состояние для текста ошибки
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Состояние ошибки для пользователя
   const handleChange = (e) => {
@@ -36,6 +37,7 @@ export default function Register({ setIsAuth }) {
     }
 
     try {
+      setIsSubmitting(true);
       // Отправка данных на сервер
       const data = await signUp({
         name: formData.name,
@@ -43,15 +45,22 @@ export default function Register({ setIsAuth }) {
         password: formData.password,
       });
 
-      if (data) {
-        // Сохраняем данные пользователя с его токеном в localStorage
-        localStorage.setItem("user", JSON.stringify(data));
+      const user = data.user || data;
+      const token = user.token || data.token;
+
+      if (user && token) {
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", token);
         setIsAuth(true);
         navigate("/");
+      } else {
+        setError("Ошибка: сервер не прислал токен доступа");
       }
     } catch (err) {
       // Если ошибка от API
       setError(err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -85,8 +94,8 @@ export default function Register({ setIsAuth }) {
           {/* Вывод ошибки для пользователю */}
           {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
 
-          <S.ButtonRegister type="submit">
-            Зарегистрироваться
+          <S.ButtonRegister type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Регистрация..." : "Зарегистрироваться"}
           </S.ButtonRegister>
 
           <S.FormGroup>

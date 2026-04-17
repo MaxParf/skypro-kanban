@@ -2,7 +2,7 @@ import { useState } from "react";
 import AppRoutes from "./AppRoutes";
 
 function App() {
-  const [isAuth, setIsAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(Boolean(localStorage.getItem("token")));
 
   return (
     <AppRoutes isAuth={isAuth} setIsAuth={setIsAuth} />

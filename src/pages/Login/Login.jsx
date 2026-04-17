@@ -14,6 +14,7 @@ export default function Login({ setIsAuth }) {
 
   // Состояние отображения ошибки для пользователя
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,17 +35,18 @@ export default function Login({ setIsAuth }) {
     }
 
     try {
+      setIsSubmitting(true);
       const data = await signIn({
         login: formData.login,
         password: formData.password,
       });
 
-      // ИСПРАВЛЕНИЕ: В Skypro API токен обычно лежит в data.user.token
-      // Проверяем наличие объекта user и токена внутри него
-      if (data && data.user && data.user.token) {
-        // Сохраняем данные пользователя и токен отдельно для удобства Main.jsx
-        localStorage.setItem("user", JSON.stringify(data.user)); 
-        localStorage.setItem("token", data.user.token);
+      const user = data.user || data;
+      const token = user.token || data.token;
+
+      if (user && token) {
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", token);
         
         setIsAuth(true);
         navigate("/");
@@ -53,6 +55,8 @@ export default function Login({ setIsAuth }) {
       }
     } catch (err) {
       setError(err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -81,7 +85,9 @@ export default function Login({ setIsAuth }) {
           {/* Подсвечиваем ошибку красным цветом */}
           {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
 
-          <S.ButtonEnter type="submit">Войти</S.ButtonEnter>
+          <S.ButtonEnter type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Вход..." : "Войти"}
+          </S.ButtonEnter>
           
           <S.FormGroup>
             <p>Нужно зарегистрироваться?</p>

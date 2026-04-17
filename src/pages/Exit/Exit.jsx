@@ -9,7 +9,12 @@ export default function Exit({ setIsAuth }) {
       <S.ExitBlock>
         <S.ExitTitle>Выйти из аккаунта?</S.ExitTitle>
         <S.ExitButtonGroup>
-          <S.ExitButton $primary onClick={() => { setIsAuth(false); navigate("/login"); }}>
+          <S.ExitButton $primary onClick={() => {
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
+            setIsAuth(false);
+            navigate("/login");
+          }}>
             Да, выйти
           </S.ExitButton>
           <S.ExitButton onClick={() => navigate("/")}>

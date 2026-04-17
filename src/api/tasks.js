@@ -1,5 +1,10 @@
 const API_URL = "https://wedev-api.sky.pro/api/kanban";
 
+async function getErrorMessage(response, fallbackMessage) {
+  const errorData = await response.json().catch(() => ({}));
+  return errorData.error || fallbackMessage;
+}
+
 // Получение списка задач
 export async function getTasks({ token }) {
   const response = await fetch(API_URL, {
@@ -10,7 +15,7 @@ export async function getTasks({ token }) {
   });
 
   if (!response.ok) {
-    throw new Error("Ошибка при получении задач");
+    throw new Error(await getErrorMessage(response, "Ошибка при получении задач"));
   }
 
   const data = await response.json();
@@ -28,8 +33,7 @@ export async function postTask({ token, taskData }) {
   });
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || "Ошибка при создании задачи");
+    throw new Error(await getErrorMessage(response, "Ошибка при создании задачи"));
   }
 
   return await response.json();
@@ -45,7 +49,7 @@ export async function deleteTask({ token, id }) {
   });
 
   if (!response.ok) {
-    throw new Error("Ошибка при удалении задачи");
+    throw new Error(await getErrorMessage(response, "Ошибка при удалении задачи"));
   }
 
   return await response.json();
@@ -62,7 +66,7 @@ export async function editTask({ token, id, taskData }) {
   });
 
   if (!response.ok) {
-    throw new Error("Ошибка при редактировании задачи");
+    throw new Error(await getErrorMessage(response, "Ошибка при редактировании задачи"));
   }
 
   return await response.json();

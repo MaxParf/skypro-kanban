@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { postTask } from "../../../api/tasks";
 import Calendar from "../../Calendar/Calendar"; 
 import * as S from "./PopNewCard.styled";
+import { useTasks } from "../../../context/useTasks";
+import { format } from "date-fns";
 
 function PopNewCard() {
   const navigate = useNavigate();
-  const { fetchTasks } = useOutletContext();
+  const { fetchTasks } = useTasks();
 
   const [newTask, setNewTask] = useState({ title: "", topic: "", description: "" });
   const [selectedDate, setSelectedDate] = useState(null);
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const topics = ["Web Design", "Research", "Copywriting"];
 
@@ -28,12 +31,15 @@ function PopNewCard() {
 
     const token = localStorage.getItem("token");
     try {
+      setIsSubmitting(true);
       const taskData = { ...newTask, date: selectedDate.toISOString() };
       await postTask({ token, taskData });
       await fetchTasks();
       navigate("/");
     } catch (err) {
       setError(err.message || "Ошибка при создании задачи");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -72,7 +78,7 @@ function PopNewCard() {
                 {!selectedDate ? (
                   "Выберите срок исполнения."
                 ) : (
-                  <>Срок исполнения: <span>{selectedDate.toLocaleDateString('ru-RU')}</span></>
+                  <>Срок исполнения: <span>{format(selectedDate, "dd.MM.yy")}</span></>
                 )}
               </S.CalendarPeriodText>
             </S.PopNewCardCalendar>
@@ -96,8 +102,8 @@ function PopNewCard() {
 
           {error && <p style={{ color: "red", fontSize: "12px", marginTop: "10px" }}>{error}</p>}
           
-          <S.PopNewCardBtnAction onClick={handleFormSubmit}>
-            Создать задачу
+          <S.PopNewCardBtnAction onClick={handleFormSubmit} disabled={isSubmitting}>
+            {isSubmitting ? "Создание..." : "Создать задачу"}
           </S.PopNewCardBtnAction>
           
         </S.PopNewCardBlock>

@@ -1,5 +1,10 @@
 const USER_URL = "https://wedev-api.sky.pro/api/user";
 
+async function getErrorMessage(response, fallbackMessage) {
+  const errorData = await response.json().catch(() => ({}));
+  return errorData.error || fallbackMessage;
+}
+
 // ФУНКЦИЯ ВХОДА
 export async function signIn({ login, password }) {
   const response = await fetch(`${USER_URL}/login`, {
@@ -7,10 +12,11 @@ export async function signIn({ login, password }) {
     body: JSON.stringify({ login, password }),
   });
 
-  const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.error || "Ошибка авторизации");
+    throw new Error(await getErrorMessage(response, "Ошибка авторизации"));
   }
+
+  const data = await response.json();
   return data; // Возвращаем { user, token }
 }
 
@@ -21,9 +27,10 @@ export async function signUp({ login, name, password }) {
     body: JSON.stringify({ login, name, password }),
   });
 
-  const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.error || "Ошибка при регистрации");
+    throw new Error(await getErrorMessage(response, "Ошибка при регистрации"));
   }
+
+  const data = await response.json();
   return data; // Возвращаем { user, token }
 }

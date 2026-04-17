@@ -110,22 +110,43 @@ export const CalendarBlock = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    &:hover {
+    &:enabled:hover {
       background: #EAEEF6;
       border-radius: 50%;
+      color: #94A6BE;
+
+      abbr {
+        font-weight: 400;
+        color: #94A6BE;
+      }
+    }
+  }
+
+  .react-calendar__tile--now:not(.react-calendar__tile--active) {
+    background: none;
+
+    abbr {
+      font-weight: 700;
       color: #94A6BE;
     }
   }
 
-  .react-calendar__tile--now {
-    background: none;
-    abbr { font-weight: 700; color: #000; }
-  }
-
   .react-calendar__tile--active {
     background: #94A6BE !important;
-    color: white !important;
     border-radius: 50%;
+
+    abbr {
+      font-weight: 400;
+      color: #fff;
+    }
+  }
+
+  .react-calendar__tile--active:enabled:hover {
+    background: #94A6BE !important;
+
+    abbr {
+      color: #fff;
+    }
   }
 
   .react-calendar__month-view__days__day--neighboringMonth {

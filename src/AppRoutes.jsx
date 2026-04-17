@@ -13,7 +13,7 @@ export default function AppRoutes({ isAuth, setIsAuth }) {
     <Routes>
       {/* Публичный маршрут */}
       <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="/register" element={<Register setIsAuth={setIsAuth} />} />
 
       {/* Защищенные маршруты с использованием Outlet */}
       <Route element={<ProtectedRoute isAuth={isAuth} />}>

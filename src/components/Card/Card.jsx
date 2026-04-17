@@ -2,6 +2,12 @@ import * as S from "./Card.styled";
 import { colors } from "../../theme"; // Импорт палитры
 // Импорт Link, для перехода без перезагрузки
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
+
+const formatCardDate = (date) => {
+  const parsedDate = date ? new Date(date) : null;
+  return parsedDate && !Number.isNaN(parsedDate.getTime()) ? format(parsedDate, "dd.MM.yy") : "";
+};
 
 // Добавляем id в пропсы, теперь какую именно карточку открывать
 export default function Card({ topic, title, date, id }) {
@@ -16,6 +22,7 @@ export default function Card({ topic, title, date, id }) {
   // 2. Определяем набор цветов для текущей карточки. 
   // Если темы нет в списке, подставится стандартный (gray)
   const currentColor = themeStyles[topic] || colors.topicGray;
+  const formattedDate = formatCardDate(date);
 
   return (
     <S.CardItem>
@@ -51,7 +58,7 @@ export default function Card({ topic, title, date, id }) {
                   strokeLinecap="round"
                 />
               </svg>
-              <p>{date}</p>
+              <p>{formattedDate}</p>
             </S.CardDate>
           </S.CardContent>
         </S.CardWrapper>

@@ -51,10 +51,14 @@ export const HeaderButton = styled.button`
   background-color: ${colors.primary};
   color: #FFFFFF;
   border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 14px;
   line-height: 1;
   font-weight: 500;
   margin-right: 20px;
+  text-decoration: none;
 
   &:hover {
     background-color: ${colors.primaryHover};
@@ -95,6 +99,5 @@ export const HeaderUser = styled.a`
     }
   }
 `;
-
 
 
