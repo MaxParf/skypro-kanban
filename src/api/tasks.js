@@ -36,7 +36,8 @@ export async function postTask({ token, taskData }) {
     throw new Error(await getErrorMessage(response, "Ошибка при создании задачи"));
   }
 
-  return await response.json();
+  const data = await response.json();
+  return data.task || data;
 }
 
 // Удалить задачу
@@ -52,7 +53,7 @@ export async function deleteTask({ token, id }) {
     throw new Error(await getErrorMessage(response, "Ошибка при удалении задачи"));
   }
 
-  return await response.json();
+  return await response.json().catch(() => undefined);
 }
 
 // Изменить задачу (PUT)
@@ -69,5 +70,6 @@ export async function editTask({ token, id, taskData }) {
     throw new Error(await getErrorMessage(response, "Ошибка при редактировании задачи"));
   }
 
-  return await response.json();
+  const data = await response.json();
+  return data.task || data;
 }

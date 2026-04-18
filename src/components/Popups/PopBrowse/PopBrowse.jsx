@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteTask, editTask } from "../../../api/tasks";
 import * as S from "./PopBrowse.styled";
 import { Calendar } from "../../Calendar/Calendar";
 import { format } from "date-fns";
@@ -14,7 +13,7 @@ const getCardDate = (date) => {
 function PopBrowse() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { cards, fetchTasks } = useTasks();
+  const { cards, updateTask, removeTask } = useTasks();
 
   const currentCard = cards ? cards.find((card) => card._id === id) : null;
 
@@ -24,14 +23,15 @@ function PopBrowse() {
     <PopBrowseDetails
       key={currentCard._id}
       currentCard={currentCard}
-      fetchTasks={fetchTasks}
+      updateTask={updateTask}
+      removeTask={removeTask}
       id={id}
       navigate={navigate}
     />
   );
 }
 
-function PopBrowseDetails({ currentCard, fetchTasks, id, navigate }) {
+function PopBrowseDetails({ currentCard, updateTask, removeTask, id, navigate }) {
 
   const [isEdit, setIsEdit] = useState(false);
   const [selectedDate, setSelectedDate] = useState(getCardDate(currentCard?.date));
@@ -65,16 +65,10 @@ function PopBrowseDetails({ currentCard, fetchTasks, id, navigate }) {
   };
 
   const handleEditSave = async () => {
-    const token = localStorage.getItem("token");
     try {
       setIsSaving(true);
       setActionError("");
-      await editTask({ 
-        token,
-        id,
-        taskData: { ...editedTask, date: selectedDate.toISOString() }
-      });
-      await fetchTasks();
+      await updateTask(id, { ...editedTask, date: selectedDate.toISOString() });
       setIsEdit(false);
     } catch (err) {
       setActionError("Ошибка при сохранении: " + err.message);
@@ -84,13 +78,11 @@ function PopBrowseDetails({ currentCard, fetchTasks, id, navigate }) {
   };
 
   const handleDeleteTask = async () => {
-    const token = localStorage.getItem("token");
     if (window.confirm("Вы уверены, что хотите удалить задачу?")) {
       try {
         setIsDeleting(true);
         setActionError("");
-        await deleteTask({ token, id });
-        await fetchTasks();
+        await removeTask(id);
         navigate("/");
       } catch (err) {
         setActionError("Ошибка при удалении: " + err.message);

@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { postTask } from "../../../api/tasks";
-import Calendar from "../../Calendar/Calendar"; 
+import Calendar from "../../Calendar/Calendar";
 import * as S from "./PopNewCard.styled";
 import { useTasks } from "../../../context/useTasks";
 import { format } from "date-fns";
 
 function PopNewCard() {
   const navigate = useNavigate();
-  const { fetchTasks } = useTasks();
+  const { createTask } = useTasks();
 
   const [newTask, setNewTask] = useState({ title: "", topic: "", description: "" });
   const [selectedDate, setSelectedDate] = useState(null);
@@ -29,12 +28,10 @@ function PopNewCard() {
       return;
     }
 
-    const token = localStorage.getItem("token");
     try {
       setIsSubmitting(true);
       const taskData = { ...newTask, date: selectedDate.toISOString() };
-      await postTask({ token, taskData });
-      await fetchTasks();
+      await createTask(taskData);
       navigate("/");
     } catch (err) {
       setError(err.message || "Ошибка при создании задачи");

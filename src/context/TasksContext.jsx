@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { getTasks } from "../api/tasks";
+import { deleteTask, editTask, getTasks, postTask } from "../api/tasks";
 import { TasksContext } from "./tasksContextCore";
+
+const getTaskId = (task) => task?._id || task?.id;
 
 export function TasksProvider({ children }) {
   const [cards, setCards] = useState([]);
@@ -34,8 +36,35 @@ export function TasksProvider({ children }) {
     fetchTasks();
   }, [fetchTasks]);
 
+  const createTask = useCallback(async (taskData) => {
+    const token = localStorage.getItem("token");
+    const createdTask = await postTask({ token, taskData });
+
+    setCards((prevCards) => [...prevCards, createdTask]);
+    return createdTask;
+  }, []);
+
+  const updateTask = useCallback(async (id, taskData) => {
+    const token = localStorage.getItem("token");
+    const updatedTask = await editTask({ token, id, taskData });
+    const updatedTaskId = getTaskId(updatedTask) || id;
+
+    setCards((prevCards) =>
+      prevCards.map((card) => (getTaskId(card) === updatedTaskId ? updatedTask : card))
+    );
+
+    return updatedTask;
+  }, []);
+
+  const removeTask = useCallback(async (id) => {
+    const token = localStorage.getItem("token");
+
+    await deleteTask({ token, id });
+    setCards((prevCards) => prevCards.filter((card) => getTaskId(card) !== id));
+  }, []);
+
   return (
-    <TasksContext.Provider value={{ cards, isLoading, error, fetchTasks }}>
+    <TasksContext.Provider value={{ cards, isLoading, error, fetchTasks, createTask, updateTask, removeTask }}>
       {children}
     </TasksContext.Provider>
   );
