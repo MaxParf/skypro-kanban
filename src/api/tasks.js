@@ -5,6 +5,42 @@ async function getErrorMessage(response, fallbackMessage) {
   return errorData.error || fallbackMessage;
 }
 
+const getTaskId = (task) => task?._id || task?.id;
+
+function normalizeTask(task, fallbackId) {
+  if (!task) {
+    return task;
+  }
+
+  if (!task._id && task.id) {
+    return { ...task, _id: task.id };
+  }
+
+  if (!task._id && fallbackId) {
+    return { ...task, _id: fallbackId };
+  }
+
+  return task;
+}
+
+function getTaskFromResponse(data, id) {
+  if (Array.isArray(data)) {
+    const task = id ? data.find((item) => getTaskId(item) === id) : data.at(-1);
+    return normalizeTask(task, id);
+  }
+
+  if (data.task) {
+    return normalizeTask(data.task, id);
+  }
+
+  if (Array.isArray(data.tasks)) {
+    const task = id ? data.tasks.find((item) => getTaskId(item) === id) : data.tasks.at(-1);
+    return normalizeTask(task, id);
+  }
+
+  return normalizeTask(data, id);
+}
+
 // Получение списка задач
 export async function getTasks({ token }) {
   const response = await fetch(API_URL, {
@@ -37,7 +73,7 @@ export async function postTask({ token, taskData }) {
   }
 
   const data = await response.json();
-  return data.task || data;
+  return getTaskFromResponse(data);
 }
 
 // Удалить задачу
@@ -71,5 +107,5 @@ export async function editTask({ token, id, taskData }) {
   }
 
   const data = await response.json();
-  return data.task || data;
+  return getTaskFromResponse(data, id);
 }

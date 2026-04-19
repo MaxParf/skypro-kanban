@@ -50,7 +50,11 @@ export function TasksProvider({ children }) {
     const updatedTaskId = getTaskId(updatedTask) || id;
 
     setCards((prevCards) =>
-      prevCards.map((card) => (getTaskId(card) === updatedTaskId ? updatedTask : card))
+      prevCards.map((card) =>
+        getTaskId(card) === updatedTaskId
+          ? { ...card, ...taskData, ...updatedTask, _id: updatedTaskId }
+          : card
+      )
     );
 
     return updatedTask;
