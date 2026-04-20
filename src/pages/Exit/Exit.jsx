@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 import * as S from "./Exit.styled";
 
-export default function Exit({ setIsAuth }) {
+export default function Exit() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   return (
     <S.ExitWrapper>
@@ -10,9 +12,7 @@ export default function Exit({ setIsAuth }) {
         <S.ExitTitle>Выйти из аккаунта?</S.ExitTitle>
         <S.ExitButtonGroup>
           <S.ExitButton $primary onClick={() => {
-            localStorage.removeItem("user");
-            localStorage.removeItem("token");
-            setIsAuth(false);
+            logout();
             navigate("/login");
           }}>
             Да, выйти

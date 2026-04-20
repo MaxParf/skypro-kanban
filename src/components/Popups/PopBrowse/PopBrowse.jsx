@@ -12,8 +12,7 @@ const getCardDate = (date) => {
 
 function PopBrowse() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { cards, updateTask, removeTask } = useTasks();
+  const { cards } = useTasks();
 
   const currentCard = cards ? cards.find((card) => card._id === id) : null;
 
@@ -23,15 +22,14 @@ function PopBrowse() {
     <PopBrowseDetails
       key={currentCard._id}
       currentCard={currentCard}
-      updateTask={updateTask}
-      removeTask={removeTask}
       id={id}
-      navigate={navigate}
     />
   );
 }
 
-function PopBrowseDetails({ currentCard, updateTask, removeTask, id, navigate }) {
+function PopBrowseDetails({ currentCard, id }) {
+  const navigate = useNavigate();
+  const { updateTask, deleteTask } = useTasks();
 
   const [isEdit, setIsEdit] = useState(false);
   const [selectedDate, setSelectedDate] = useState(getCardDate(currentCard?.date));
@@ -82,7 +80,7 @@ function PopBrowseDetails({ currentCard, updateTask, removeTask, id, navigate })
       try {
         setIsDeleting(true);
         setActionError("");
-        await removeTask(id);
+        await deleteTask(id);
         navigate("/");
       } catch (err) {
         setActionError("Ошибка при удалении: " + err.message);

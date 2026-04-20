@@ -3,19 +3,10 @@ import Header from "../../components/Header/Header";
 import MainContent from "../../components/Main/Main"; 
 import { GlobalStyle } from "../../GlobalStyle.styled"; 
 import * as S from "../../App.styled"; 
-import { TasksProvider } from "../../context/TasksContext";
 import { useTasks } from "../../context/useTasks";
 
 export default function Main() {
-  return (
-    <TasksProvider>
-      <MainPageContent />
-    </TasksProvider>
-  );
-}
-
-function MainPageContent() {
-  const { cards, isLoading, error } = useTasks();
+  const { isLoading, error } = useTasks();
 
   return (
     <>
@@ -32,7 +23,7 @@ function MainPageContent() {
             <p className="loader-text">Данные загружаются...</p>
           </div>
         ) : (
-          <MainContent cards={cards} />
+          <MainContent />
         )}
       </S.Wrapper>
     </>

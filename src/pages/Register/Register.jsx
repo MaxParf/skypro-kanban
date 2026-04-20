@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signUp } from "../../api/auth"; 
+import { useAuth } from "../../context/useAuth";
 import * as S from "./Register.styled";
 
-export default function Register({ setIsAuth }) {
+export default function Register() {
   const navigate = useNavigate();
+  const { register } = useAuth();
 
   // Состояние полей ввода
   const [formData, setFormData] = useState({
@@ -38,24 +39,13 @@ export default function Register({ setIsAuth }) {
 
     try {
       setIsSubmitting(true);
-      // Отправка данных на сервер
-      const data = await signUp({
+      await register({
         name: formData.name,
         login: formData.login,
         password: formData.password,
       });
 
-      const user = data.user || data;
-      const token = user.token || data.token;
-
-      if (user && token) {
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", token);
-        setIsAuth(true);
-        navigate("/");
-      } else {
-        setError("Ошибка: сервер не прислал токен доступа");
-      }
+      navigate("/");
     } catch (err) {
       // Если ошибка от API
       setError(err.message);

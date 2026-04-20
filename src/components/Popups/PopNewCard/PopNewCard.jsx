@@ -7,7 +7,7 @@ import { format } from "date-fns";
 
 function PopNewCard() {
   const navigate = useNavigate();
-  const { createTask } = useTasks();
+  const { addTask } = useTasks();
 
   const [newTask, setNewTask] = useState({ title: "", topic: "", description: "" });
   const [selectedDate, setSelectedDate] = useState(null);
@@ -31,7 +31,7 @@ function PopNewCard() {
     try {
       setIsSubmitting(true);
       const taskData = { ...newTask, date: selectedDate.toISOString() };
-      await createTask(taskData);
+      await addTask(taskData);
       navigate("/");
     } catch (err) {
       setError(err.message || "Ошибка при создании задачи");

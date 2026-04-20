@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { signIn } from "../../api/auth"; // Импортируем API функцию
+import { useAuth } from "../../context/useAuth";
 import * as S from "./Login.styled";
 
-export default function Login({ setIsAuth }) {
+export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   // Состояние полей ввода
   const [formData, setFormData] = useState({
@@ -36,23 +37,12 @@ export default function Login({ setIsAuth }) {
 
     try {
       setIsSubmitting(true);
-      const data = await signIn({
+      await login({
         login: formData.login,
         password: formData.password,
       });
 
-      const user = data.user || data;
-      const token = user.token || data.token;
-
-      if (user && token) {
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", token);
-        
-        setIsAuth(true);
-        navigate("/");
-      } else {
-        setError("Ошибка: сервер не прислал токен доступа");
-      }
+      navigate("/");
     } catch (err) {
       setError(err.message);
     } finally {

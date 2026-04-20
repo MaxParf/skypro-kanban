@@ -1,20 +1,20 @@
 import { useCallback, useEffect, useState } from "react";
 import { deleteTask, editTask, getTasks, postTask } from "../api/tasks";
 import { TasksContext } from "./tasksContextCore";
+import { useAuth } from "./useAuth";
 
 const getTaskId = (task) => task?._id || task?.id;
 
 export function TasksProvider({ children }) {
+  const { token } = useAuth();
   const [cards, setCards] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(Boolean(token));
   const [error, setError] = useState(null);
 
   const fetchTasks = useCallback(async () => {
-    const token = localStorage.getItem("token");
-
     if (!token) {
       setCards([]);
-      setError("Необходима авторизация");
+      setError(null);
       setIsLoading(false);
       return;
     }
@@ -30,22 +30,20 @@ export function TasksProvider({ children }) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     fetchTasks();
   }, [fetchTasks]);
 
-  const createTask = useCallback(async (taskData) => {
-    const token = localStorage.getItem("token");
+  const addTask = useCallback(async (taskData) => {
     const createdTask = await postTask({ token, taskData });
 
     setCards((prevCards) => [...prevCards, createdTask]);
     return createdTask;
-  }, []);
+  }, [token]);
 
   const updateTask = useCallback(async (id, taskData) => {
-    const token = localStorage.getItem("token");
     const updatedTask = await editTask({ token, id, taskData });
     const updatedTaskId = getTaskId(updatedTask) || id;
 
@@ -58,17 +56,15 @@ export function TasksProvider({ children }) {
     );
 
     return updatedTask;
-  }, []);
+  }, [token]);
 
-  const removeTask = useCallback(async (id) => {
-    const token = localStorage.getItem("token");
-
+  const deleteTaskById = useCallback(async (id) => {
     await deleteTask({ token, id });
     setCards((prevCards) => prevCards.filter((card) => getTaskId(card) !== id));
-  }, []);
+  }, [token]);
 
   return (
-    <TasksContext.Provider value={{ cards, isLoading, error, fetchTasks, createTask, updateTask, removeTask }}>
+    <TasksContext.Provider value={{ cards, isLoading, error, fetchTasks, addTask, updateTask, deleteTask: deleteTaskById }}>
       {children}
     </TasksContext.Provider>
   );

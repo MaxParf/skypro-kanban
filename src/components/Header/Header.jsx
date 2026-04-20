@@ -1,16 +1,11 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 import * as S from "./Header.styled";
 
 export default function Header() {
-  let user = {};
+  const { user } = useAuth();
 
-  try {
-    user = JSON.parse(localStorage.getItem("user") || "{}");
-  } catch {
-    user = {};
-  }
-
-  const userName = user.name || user.login || "Пользователь";
+  const userName = user?.name || user?.login || "Пользователь";
 
   return (
     <S.HeaderWrapper>

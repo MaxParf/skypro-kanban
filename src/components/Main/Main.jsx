@@ -1,7 +1,10 @@
 import * as S from "./Main.styled";
 import Column from "../Column/Column.jsx";
+import { useTasks } from "../../context/useTasks";
 
-export default function Main({ cards }) {
+export default function Main() {
+  const { cards } = useTasks();
+
   return (
     <S.MainContainer>
       <S.MainBlock>
