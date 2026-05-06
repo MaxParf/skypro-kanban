@@ -1,6 +1,5 @@
 import * as S from "./Card.styled";
-import { colors } from "../../theme"; // Импорт палитры
-// Импорт Link, для перехода без перезагрузки
+import { colors } from "../../theme";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 
@@ -9,31 +8,21 @@ const formatCardDate = (date) => {
   return parsedDate && !Number.isNaN(parsedDate.getTime()) ? format(parsedDate, "dd.MM.yy") : "";
 };
 
-// Добавляем id в пропсы, теперь какую именно карточку открывать
 export default function Card({ topic, title, date, id }) {
-  
-  // 1. Создаем объект-словарь, где ключу (теме) соответствует объект с цветами из theme.js
   const themeStyles = {
     "Web Design": colors.topicOrange,
     "Research": colors.topicGreen,
     "Copywriting": colors.topicPurple,
   };
 
-  // 2. Определяем набор цветов для текущей карточки. 
-  // Если темы нет в списке, подставится стандартный (gray)
   const currentColor = themeStyles[topic] || colors.topicGray;
   const formattedDate = formatCardDate(date);
 
   return (
     <S.CardItem>
-      {/* Обернули содержимое в Link. 
-          При клике на карточку URL изменится на id карты */}
       <Link to={`/card/${id}`}>
-        {/* GEMINI: Добавляем as="div", чтобы избежать вложенных <a>, 
-            если CardWrapper изначально был ссылкой в стилях */}
         <S.CardWrapper as="div">
           <S.CardGroup>
-            {/* Передаем объект с цветами в пропс $colorObj */}
             <S.CardTheme $colorObj={currentColor}>
               <p>{topic}</p>
             </S.CardTheme>

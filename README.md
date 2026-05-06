@@ -1,17 +1,97 @@
-# React + Vite
+# SkyPro Kanban Board
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Курсовой проект по React: канбан-доска для управления задачами с регистрацией, авторизацией и CRUD-операциями через учебный API SkyPro.
 
-Currently, two official plugins are available:
+## Функции
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- регистрация пользователя;
+- авторизация пользователя;
+- выход из аккаунта;
+- защищенные маршруты для авторизованных пользователей;
+- загрузка задач с сервера;
+- создание задачи;
+- просмотр задачи;
+- редактирование задачи;
+- удаление задачи;
+- смена статуса задачи;
+- выбор даты выполнения через календарь;
+- локальное обновление списка задач после CRUD без повторного GET-запроса;
+- состояния загрузки, ошибок и пустого списка задач.
 
-## React Compiler
+## Технологии
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- React Router
+- Context API
+- styled-components
+- react-calendar
+- date-fns
+- ESLint
 
-## Expanding the ESLint configuration
+## Архитектура
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project. 
+Проект разделяет авторизацию и задачи через отдельные контексты:
 
+- `AuthContext` хранит пользователя, токен, состояние авторизации и методы `login`, `register`, `logout`;
+- `TasksContext` хранит список задач, состояние загрузки, ошибку и методы `fetchTasks`, `addTask`, `updateTask`, `deleteTask`.
+
+Данные авторизации сохраняются в `localStorage` внутри `AuthContext`. Компоненты получают доступ к данным через хуки `useAuth` и `useTasks`.
+
+## Работа с задачами
+
+CRUD задач реализован через API:
+
+- `GET /api/kanban` - получить список задач;
+- `POST /api/kanban` - создать задачу;
+- `PUT /api/kanban/:id` - изменить задачу;
+- `DELETE /api/kanban/:id` - удалить задачу.
+
+После создания, редактирования и удаления задачи список обновляется локально в `TasksContext`, без дополнительной перезагрузки всех задач.
+
+## Авторизация
+
+Для входа и регистрации используется API пользователей:
+
+- `POST /api/user/login` - вход;
+- `POST /api/user` - регистрация.
+
+После успешной авторизации токен используется в заголовке `Authorization: Bearer <token>` для запросов к задачам.
+
+## API
+
+Документация учебного API:
+
+https://github.com/GlebkaF/webdev-hw-api/tree/main/pages/api/kanban
+
+Базовый адрес API задач:
+
+```text
+https://wedev-api.sky.pro/api/kanban
+```
+
+## Запуск проекта
+
+Установить зависимости:
+
+```bash
+npm install
+```
+
+Запустить проект в режиме разработки:
+
+```bash
+npm run dev
+```
+
+Проверить код линтером:
+
+```bash
+npm run lint
+```
+
+Собрать проект:
+
+```bash
+npm run build
+```

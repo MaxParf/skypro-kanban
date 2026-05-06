@@ -63,10 +63,19 @@ function PopBrowseDetails({ currentCard, id }) {
   };
 
   const handleEditSave = async () => {
+    if (!editedTask.description.trim()) {
+      setActionError("Заполните описание задачи");
+      return;
+    }
+
     try {
       setIsSaving(true);
       setActionError("");
-      await updateTask(id, { ...editedTask, date: selectedDate.toISOString() });
+      await updateTask(id, {
+        ...editedTask,
+        description: editedTask.description.trim(),
+        date: selectedDate.toISOString(),
+      });
       setIsEdit(false);
     } catch (err) {
       setActionError("Ошибка при сохранении: " + err.message);
@@ -137,7 +146,6 @@ function PopBrowseDetails({ currentCard, id }) {
                 </S.FormBrowseBlock>
               </S.PopBrowseForm>
 
-              {/* Календарь справа согласно макету */}
               <S.PopBrowseCalendar>
                 <S.StatusTtl>Даты</S.StatusTtl>
                 <Calendar 

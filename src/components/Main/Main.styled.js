@@ -1,13 +1,11 @@
 import styled from "styled-components";
 import { colors } from "../../theme";
 
-// Основная секция main
 export const MainContainer = styled.main`
   width: 100%;
   background-color: ${colors.background};
 `;
 
-// Ограничитель ширины контента (аналогично Header)
 export const MainBlock = styled.div`
   max-width: 1260px;
   width: 100%;
@@ -15,7 +13,6 @@ export const MainBlock = styled.div`
   padding: 0 30px;
 `;
 
-// Контейнер сетки столбцов
 export const MainContent = styled.div`
   width: 100%;
   display: flex;
@@ -24,9 +21,19 @@ export const MainContent = styled.div`
   justify-content: center;
   padding: 40px 0;
 
-  // Адаптация под моб.устр.
   @media screen and (max-width: 1200px) {
     flex-direction: column;
     align-items: center;
   }
+`;
+
+export const EmptyState = styled.div`
+  width: 100%;
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94A6BE;
+  font-size: 18px;
+  font-weight: 500;
 `;

@@ -1,13 +1,11 @@
 import styled from "styled-components";
 import { colors } from "../../theme";
 
-// 1. Обёртка всей карточки
 export const CardItem = styled.div`
   padding: 5px;
   animation: card-ani 0.5s ease-in-out forwards;
 `;
 
-// 2. Внутренний блок карточки
 export const CardWrapper = styled.div`
   width: 220px;
   height: 130px;
@@ -18,7 +16,6 @@ export const CardWrapper = styled.div`
   padding: 15px 20px;
 `;
 
-// 3. Группа для темы (верхняя часть)
 export const CardGroup = styled.div`
   width: 100%;
   height: 20px;
@@ -28,7 +25,6 @@ export const CardGroup = styled.div`
   justify-content: space-between;
 `;
 
-// 4. Плашка темы (с динамическим цветом)
 export const CardTheme = styled.div`
   width: auto;
   height: 20px;
@@ -44,7 +40,6 @@ export const CardTheme = styled.div`
   }
 `;
 
-// 5. Контейнер для текста
 export const CardContent = styled.div`
   height: 64px;
   display: flex;
@@ -53,7 +48,6 @@ export const CardContent = styled.div`
   justify-content: space-between;
 `;
 
-// 6. Заголовок карточки
 export const CardTitle = styled.h3`
   font-size: 14px;
   font-weight: 500;
@@ -62,7 +56,6 @@ export const CardTitle = styled.h3`
   margin-bottom: 10px;
 `;
 
-// 7. Блок с датой
 export const CardDate = styled.div`
   display: flex;
   align-items: center;

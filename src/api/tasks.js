@@ -41,7 +41,6 @@ function getTaskFromResponse(data, id) {
   return normalizeTask(data, id);
 }
 
-// Получение списка задач
 export async function getTasks({ token }) {
   const response = await fetch(API_URL, {
     method: "GET",
@@ -55,10 +54,9 @@ export async function getTasks({ token }) {
   }
 
   const data = await response.json();
-  return data; // Вернет { tasks: [...] }
+  return data;
 }
 
-// Добавление задачи
 export async function postTask({ token, taskData }) {
   const response = await fetch(API_URL, {
     method: "POST",
@@ -76,7 +74,6 @@ export async function postTask({ token, taskData }) {
   return getTaskFromResponse(data);
 }
 
-// Удалить задачу
 export async function deleteTask({ token, id }) {
   const response = await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
@@ -92,7 +89,6 @@ export async function deleteTask({ token, id }) {
   return await response.json().catch(() => undefined);
 }
 
-// Изменить задачу (PUT)
 export async function editTask({ token, id, taskData }) {
   const response = await fetch(`${API_URL}/${id}`, {
     method: "PUT",

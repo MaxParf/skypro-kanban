@@ -30,7 +30,12 @@ function PopNewCard() {
 
     try {
       setIsSubmitting(true);
-      const taskData = { ...newTask, date: selectedDate.toISOString() };
+      const taskData = {
+        ...newTask,
+        title: newTask.title.trim(),
+        description: newTask.description.trim(),
+        date: selectedDate.toISOString(),
+      };
       await addTask(taskData);
       navigate("/");
     } catch (err) {

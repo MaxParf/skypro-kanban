@@ -7,13 +7,11 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  // Состояние полей ввода
   const [formData, setFormData] = useState({
     login: "",
     password: "",
   });
 
-  // Состояние отображения ошибки для пользователя
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -26,7 +24,6 @@ export default function Login() {
     setError("");
   };
 
-  // Отправка формы
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -38,7 +35,7 @@ export default function Login() {
     try {
       setIsSubmitting(true);
       await login({
-        login: formData.login,
+        login: formData.login.trim(),
         password: formData.password,
       });
 
@@ -72,7 +69,6 @@ export default function Login() {
             onChange={handleChange}
           />
 
-          {/* Подсвечиваем ошибку красным цветом */}
           {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
 
           <S.ButtonEnter type="submit" disabled={isSubmitting}>

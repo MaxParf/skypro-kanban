@@ -5,7 +5,6 @@ async function getErrorMessage(response, fallbackMessage) {
   return errorData.error || fallbackMessage;
 }
 
-// ФУНКЦИЯ ВХОДА
 export async function signIn({ login, password }) {
   const response = await fetch(`${USER_URL}/login`, {
     method: "POST",
@@ -17,10 +16,9 @@ export async function signIn({ login, password }) {
   }
 
   const data = await response.json();
-  return data; // Возвращаем { user, token }
+  return data;
 }
 
-// ФУНКЦИЯ РЕГИСТРАЦИИ (Добавили обратно, чтобы Register.jsx не ругался)
 export async function signUp({ login, name, password }) {
   const response = await fetch(USER_URL, {
     method: "POST",
@@ -32,5 +30,5 @@ export async function signUp({ login, name, password }) {
   }
 
   const data = await response.json();
-  return data; // Возвращаем { user, token }
+  return data;
 }

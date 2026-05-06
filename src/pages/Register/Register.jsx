@@ -7,18 +7,15 @@ export default function Register() {
   const navigate = useNavigate();
   const { register } = useAuth();
 
-  // Состояние полей ввода
   const [formData, setFormData] = useState({
     name: "",
     login: "",
     password: "",
   });
 
-  // Состояние для текста ошибки
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Состояние ошибки для пользователя
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -31,7 +28,6 @@ export default function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Валидация перед запросом
     if (!formData.name.trim() || !formData.login.trim() || !formData.password.trim()) {
       setError("Заполните все поля");
       return;
@@ -40,14 +36,13 @@ export default function Register() {
     try {
       setIsSubmitting(true);
       await register({
-        name: formData.name,
-        login: formData.login,
+        name: formData.name.trim(),
+        login: formData.login.trim(),
         password: formData.password,
       });
 
       navigate("/");
     } catch (err) {
-      // Если ошибка от API
       setError(err.message);
     } finally {
       setIsSubmitting(false);
@@ -61,14 +56,14 @@ export default function Register() {
         <S.Form onSubmit={handleRegister}>
           <S.Input 
             type="text" 
-            name="name" // сверка имени
+            name="name"
             placeholder="Имя" 
             value={formData.name} 
             onChange={handleChange} 
           />
           <S.Input 
             type="email" 
-            name="login" // API ждет ключ login
+            name="login"
             placeholder="Эл. почта" 
             value={formData.login} 
             onChange={handleChange} 
@@ -81,7 +76,6 @@ export default function Register() {
             onChange={handleChange} 
           />
           
-          {/* Вывод ошибки для пользователю */}
           {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
 
           <S.ButtonRegister type="submit" disabled={isSubmitting}>

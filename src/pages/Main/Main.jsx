@@ -19,9 +19,10 @@ export default function Main() {
         {error && <p style={{ color: "red", textAlign: "center", marginTop: "20px" }}>{error}</p>}
 
         {isLoading ? (
-          <div className="loader-container">
-            <p className="loader-text">Данные загружаются...</p>
-          </div>
+          <S.LoaderBox>
+            <S.LoaderSpinner />
+            <S.LoaderText>Данные загружаются...</S.LoaderText>
+          </S.LoaderBox>
         ) : (
           <MainContent />
         )}
