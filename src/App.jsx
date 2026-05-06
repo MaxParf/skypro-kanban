@@ -1,11 +1,14 @@
-import { useState } from "react";
 import AppRoutes from "./AppRoutes";
+import { AuthProvider } from "./context/AuthContext";
+import { TasksProvider } from "./context/TasksContext";
 
 function App() {
-  const [isAuth, setIsAuth] = useState(false);
-
   return (
-    <AppRoutes isAuth={isAuth} setIsAuth={setIsAuth} />
+    <AuthProvider>
+      <TasksProvider>
+        <AppRoutes />
+      </TasksProvider>
+    </AuthProvider>
   );
 }
 

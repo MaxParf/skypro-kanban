@@ -1,38 +1,30 @@
-import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom"; // [cite: 92]
-import Header from "../../components/Header/Header"; // [cite: 92]
-import MainContent from "../../components/Main/Main"; // [cite: 92]
-import { cardList } from "../../data"; // [cite: 94]
-import { GlobalStyle } from "../../GlobalStyle.styled"; // [cite: 94]
-import * as S from "../../App.styled"; // [cite: 94]
+import { Outlet } from "react-router-dom"; 
+import Header from "../../components/Header/Header"; 
+import MainContent from "../../components/Main/Main"; 
+import { GlobalStyle } from "../../GlobalStyle.styled"; 
+import * as S from "../../App.styled"; 
+import { useTasks } from "../../context/useTasks";
 
 export default function Main() {
-  const [cards, setCards] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCards(cardList);
-      setIsLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
+  const { isLoading, error } = useTasks();
 
   return (
     <>
       <GlobalStyle />
       <S.Wrapper>
-        {/* Модалки (AddTask, CardPage, Exit) рендерим здесь */}
-        <Outlet /> 
+        <Outlet />
         
         <Header />
 
+        {error && <p style={{ color: "red", textAlign: "center", marginTop: "20px" }}>{error}</p>}
+
         {isLoading ? (
-          <div className="loader-container">
-            <p className="loader-text">Данные загружаются...</p>
-          </div>
+          <S.LoaderBox>
+            <S.LoaderSpinner />
+            <S.LoaderText>Данные загружаются...</S.LoaderText>
+          </S.LoaderBox>
         ) : (
-          <MainContent cards={cards} />
+          <MainContent />
         )}
       </S.Wrapper>
     </>

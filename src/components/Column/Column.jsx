@@ -10,8 +10,8 @@ export default function Column({ title, cards }) {
       <S.ColumnCards>
         {cards.map((card) => ( 
           <Card 
-            key={card.id} 
-            id={card.id} // передаем id
+            key={card._id} 
+            id={card._id} // передаем id
             topic={card.topic} 
             title={card.title} 
             date={card.date} 

@@ -8,24 +8,20 @@ import AddTask from "./pages/AddTask/AddTask";
 import CardPage from "./pages/Card/Card";
 import Register from "./pages/Register/Register";
 
-export default function AppRoutes({ isAuth, setIsAuth }) {
+export default function AppRoutes() {
   return (
     <Routes>
-      {/* Публичный маршрут */}
-      <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* Защищенные маршруты с использованием Outlet */}
-      <Route element={<ProtectedRoute isAuth={isAuth} />}>
+      <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Main />}>
-          {/* Вложенные маршруты для модалок. Без ведущего слэша! */}
-          <Route path="exit" element={<Exit setIsAuth={setIsAuth} />} />
+          <Route path="exit" element={<Exit />} />
           <Route path="add-task" element={<AddTask />} />
           <Route path="card/:id" element={<CardPage />} />
         </Route>
       </Route>
 
-      {/* Маршрут для обработки несуществующих страниц */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
